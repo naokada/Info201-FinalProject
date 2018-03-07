@@ -29,7 +29,7 @@ server <- function(input, output) {
     # calculate difference in position
     dlat <- loc.shop[1] - input$lat
     dlong <- loc.shop[2] - input$long
-    # to ditermin what direction the angle changes from
+    # to determin what direction the angle changes from
     di <- "North"
     if (dlat < 0) {
       if (dlong < 0) {
