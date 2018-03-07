@@ -34,7 +34,7 @@ server <- function(input, output) {
         di <- "West"
       }
     }
-    angle <- atan2(dlat, dlong) / pi * -180 
+    angle <- atan2(abs(dlat), abs(dlong)) / pi * 180 
     paste0("The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
            " degrees from ", di, ".")
   })
