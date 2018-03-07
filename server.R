@@ -42,7 +42,7 @@ server <- function(input, output) {
         di <- "West"
       }
     }
-    # calculates the angle
+    # calculates the angle. (the angle goes clockwise)
     angle <- atan2(abs(dlat), abs(dlong)) / pi * 180 
     paste0("The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
            " degrees from ", di, ".")
