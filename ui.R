@@ -26,10 +26,9 @@ ui <- dashboardPage(skin = "purple",
                                       
                                   
                                   
-                                    textInput("place", "position", placeholder = "format: latitude, longitude"),
-                                    p("You need to input at least a position or a region for it to show information"),
-                                    p("For example, you can try 47.658806, -122.313386, which is near UW"),
-                                    p("Or you can try 40.689249, -74.0445, which is near the Statue of Liberty"),
+                                    
+                                    p("Type in a location you want to look up or skim through 
+                                      the map and click on a location of interest."),
                                     uiOutput("link"),
                                     br(),
                                     textInput("region", "region", placeholder = "for example: subway in Seattle, or US"),

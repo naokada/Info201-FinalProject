@@ -1,12 +1,18 @@
 #source("set.R")
 server <- function(input, output) {
+  
+  click <- reactive({
+    return(input$map_click)
+    
+  })
+  
   base <- "https://maps.googleapis.com/maps/api/place/"
   
   place.id <- reactive({
     
     resource <- paste0(base, "textsearch/json?")
-    parameters <- list(key = google.google.api.key, query = input$region, 
-                       type = input$type, location = input$place, radius = 600)
+    parameters <- list(key = google.api.key, query = input$region, 
+                       type = input$type, location = input$location, radius = 600)
     body <- GET(resource, query = parameters)
     place <- fromJSON(content(body, "text"))
     
@@ -18,7 +24,7 @@ server <- function(input, output) {
   place.details <- reactive({
     
     resource <- paste0(base, "details/json?")
-    parameters <- list(key = google.google.api.key, placeid = place.id())
+    parameters <- list(key = google.api.key, placeid = place.id())
     body <- GET(resource, query = parameters)
     place.details <- fromJSON(content(body, "text"))
     
@@ -29,8 +35,8 @@ server <- function(input, output) {
   pic.url <- reactive({
     
     photo.reference <- place.details()$result$photos$photo_reference[1]
-    resource <- paste0(base, "photo?maxwidth=500&maxheight=400&photoreference=", photo.reference, "&key=", google.google.api.key)
-    parameters <- list(key = google.google.api.key, placeid = place.id())
+    resource <- paste0(base, "photo?maxwidth=500&maxheight=400&photoreference=", photo.reference, "&key=", google.api.key)
+    parameters <- list(key = google.api.key, placeid = place.id())
     photo <- GET(resource, query = parameters)
     photo.url <- photo[["url"]]
     
@@ -63,9 +69,7 @@ server <- function(input, output) {
   
   url <- a("Click me", href="https://www.latlong.net/")
   
-  output$link <- renderUI({
-    tagList("Use this to search for latitude and longitude for a place:", url)
-  })
+ 
   
   output$image <- renderText({
     c('<img src="', pic.url(),'">')
@@ -83,7 +87,7 @@ server <- function(input, output) {
   # get the JSON result from the API
   data <- reactive({
     base <- "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
-    resource <- list(key = google.api.key, location = paste0(input$lat, ", ", input$long), 
+    resource <- list(key = google.api.key, location = paste0(click()$lat, ", ", click()$long), 
                      radius = 1000, name = input$name)
     body <- GET(base, query = resource)
     search <- fromJSON(content(body, "text"))
@@ -105,11 +109,11 @@ server <- function(input, output) {
     # get shop's lat and long
     loc.shop <- c(final$result$geometry$location$lat, final$result$geometry$location$lng)
     # calculate distance
-    dist <- distm(c(loc.shop[2], loc.shop[1]), c(input$long, input$lat), fun = distHaversine) *
+    dist <- distm( c(loc.shop[2], loc.shop[1]), c(click()$long, click()$lat), fun = distHaversine) *
             0.000621
     # calculate difference in position
-    dlat <- loc.shop[1] - input$lat
-    dlong <- loc.shop[2] - input$long
+    dlat <- loc.shop[1] - click()$lat
+    dlong <- loc.shop[2] - click()$long
     # to determin what direction the angle changes from
     di <- "North"
     if (dlat < 0) {
