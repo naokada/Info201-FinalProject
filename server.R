@@ -1,9 +1,23 @@
+source(set.R)
 server <- function(input, output) {
-  base <- "https://maps.googleapis.com/maps/api/place/"
+  output$map <- renderLeaflet({
+    
+    leaflet() %>%
+      addTiles() %>% # Add default OpenStreetMap map tiles
+      setView(lng = -122.304010391235, lat = 47.6500093694438, zoom = 15) # UW lock
+  })
+  
+  observeEvent(input$map_click, {
+    click <- input$map_click
+    text<-paste("Lattitude ", click$lat, "Longtitude ", click$lng)
+    
+    leafletProxy("map") %>% clearPopups() %>% clearMarkers() %>%
+      addMarkers(lng =  click$lng, lat =  click$lat, icon = orange.leaf.icons) %>%
+      addPopups(click$lng, click$lat + click$lat * 0.00005, text)
+  })
   
   place.id <- reactive({
-    
-    resource <- paste0(base, "textsearch/json?")
+    resource <- paste0(base.url, "textsearch/json?")
     parameters <- list(key = google.api.key, query = input$region, 
                        type = input$type, location = input$place, radius = 600)
     body <- GET(resource, query = parameters)
@@ -28,7 +42,8 @@ server <- function(input, output) {
   pic.url <- reactive({
     
     photo.reference <- place.details()$result$photos$photo_reference[1]
-    resource <- paste0(base, "photo?maxwidth=500&maxheight=400&photoreference=", photo.reference, "&key=", google.api.key)
+    resource <- paste0(base, "photo?maxwidth=500&maxheight=400&photoreference=",
+                       photo.reference, "&key=", google.api.key)
     parameters <- list(key = google.api.key, placeid = place.id())
     photo <- GET(resource, query = parameters)
     photo.url <- photo[["url"]]
