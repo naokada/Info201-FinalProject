@@ -1,15 +1,5 @@
 
-library("httr")
-library("jsonlite")
-library("knitr")
-library("shiny")
-library("tidyr")
-library("geosphere")
-source("mykey.R")
 
-
-library("leaflet")
-library("shinydashboard")
 
 
 ui <- dashboardPage(skin = "purple", 
