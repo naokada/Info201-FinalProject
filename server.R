@@ -167,6 +167,8 @@ server <- function(input, output) {
   
 output$info <- renderText({
   
+  
+  
   "##Introduction##
 We are working with a data set containing information of all stores registered 
 on Google Place (resource https://developers.google.com/places/web-service/details)

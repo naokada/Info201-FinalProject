@@ -5,7 +5,7 @@ ui <- dashboardPage(skin = "purple",
                     dashboardSidebar(
                       sidebarMenu(
                         menuItem("Interact Map", tabName = "mapTab", icon = icon("binoculars")),
-                        menuItem("Data touch", tabName = "dataTab", icon = icon("book"))
+                        menuItem("About the App", tabName = "dataTab", icon = icon("book"))
                       )
                     ),
                     dashboardBody(
@@ -48,7 +48,7 @@ ui <- dashboardPage(skin = "purple",
                                   conditionalPanel(
                                     
                                     condition = "input.place != '' | input.region != ''",
-                                    
+                                    br(),br(),
                                     htmlOutput("image"),
                                     br(),
                                     tableOutput("table"),
@@ -61,7 +61,8 @@ ui <- dashboardPage(skin = "purple",
                         # Second tab content
                         tabItem(tabName = "dataTab",
                                 fluidRow(
-                                 verbatimTextOutput("info")
+                                  includeHTML("Place lookup.html")
+                                 #verbatimTextOutput("info")
                                 )
                         )
                         )
