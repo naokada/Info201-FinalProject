@@ -9,6 +9,7 @@ library("shinydashboard")
 
 source("apikey.R")
 
+
 # icons
 red.leaf.icons <- icons(
   iconUrl = "http://leafletjs.com/examples/custom-icons/leaf-red.png",
@@ -46,6 +47,7 @@ place <- fromJSON(content(body, "text"))
 place.id <- place$results$place_id[5]
 
 resource <- paste0(base.url, "details/json?")
+
 parameters <- list(key = google.api.key, placeid = place.id)
 body <- GET(resource, query = parameters)
 place.details <- fromJSON(content(body, "text"))
@@ -54,3 +56,4 @@ photo.reference <- place.details$result$photos$photo_reference[4]
 resource <- paste0(base.url, "photo?maxwidth=400&photoreference=", photo.reference, "&key=", google.api.key)
 photo <- GET(resource, query = parameters)
 photo.url <- photo[["url"]]
+

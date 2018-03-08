@@ -1,11 +1,25 @@
-#source("set.R")
+source("set.R")
+
 server <- function(input, output) {
-  base <- "https://maps.googleapis.com/maps/api/place/"
+  output$map <- renderLeaflet({
+    
+    leaflet() %>%
+      addTiles() %>% # Add default OpenStreetMap map tiles
+      setView(lng = -122.304010391235, lat = 47.6500093694438, zoom = 15) # UW lock
+  })
+  
+  observeEvent(input$map_click, {
+    click <- input$map_click
+    text<-paste("Lattitude ", click$lat, "Longtitude ", click$lng)
+    
+    leafletProxy("map") %>% clearPopups() %>% clearMarkers() %>%
+      addMarkers(lng =  click$lng, lat =  click$lat, icon = orange.leaf.icons) %>%
+      addPopups(click$lng, click$lat + click$lat * 0.00005, text)
+  })
   
   place.id <- reactive({
-    
-    resource <- paste0(base, "textsearch/json?")
-    parameters <- list(key = google.google.api.key, query = input$region, 
+    resource <- paste0(base.url, "textsearch/json?")
+    parameters <- list(key = google.api.key, query = input$region, 
                        type = input$type, location = input$place, radius = 600)
     body <- GET(resource, query = parameters)
     place <- fromJSON(content(body, "text"))
@@ -29,8 +43,9 @@ server <- function(input, output) {
   pic.url <- reactive({
     
     photo.reference <- place.details()$result$photos$photo_reference[1]
-    resource <- paste0(base, "photo?maxwidth=500&maxheight=400&photoreference=", photo.reference, "&key=", google.google.api.key)
-    parameters <- list(key = google.google.api.key, placeid = place.id())
+    resource <- paste0(base, "photo?maxwidth=500&maxheight=400&photoreference=",
+                       photo.reference, "&key=", google.api.key)
+    parameters <- list(key = google.api.key, placeid = place.id())
     photo <- GET(resource, query = parameters)
     photo.url <- photo[["url"]]
     
@@ -61,11 +76,7 @@ server <- function(input, output) {
     return(review.data)
   })
   
-  url <- a("Click me", href="https://www.latlong.net/")
-  
-  output$link <- renderUI({
-    tagList("Use this to search for latitude and longitude for a place:", url)
-  })
+
   
   output$image <- renderText({
     c('<img src="', pic.url(),'">')
@@ -82,8 +93,8 @@ server <- function(input, output) {
   
   # get the JSON result from the API
   data <- reactive({
-    base <- "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
-    resource <- list(key = google.api.key, location = paste0(input$lat, ", ", input$long), 
+    base <- paste0(base.url, "nearbysearch/json?")
+    resource <- list(key = my.key, location = paste0(input$lat, ", ", input$long), 
                      radius = 1000, name = input$name)
     body <- GET(base, query = resource)
     search <- fromJSON(content(body, "text"))
@@ -97,7 +108,7 @@ server <- function(input, output) {
   
   # Print the distance and direction of the first thing in the relevent search results
   output$direction <- renderText({
-    base <- "https://maps.googleapis.com/maps/api/place/details/json?"
+    base <- paste0(base.url, "details/json?")
     # get the first relevent place
     resource <- list(key = google.api.key, placeid = data()$results$place_id[1])
     body <- GET(base, query = resource)
@@ -125,8 +136,8 @@ server <- function(input, output) {
     }
     # calculates the angle. (the angle goes clockwise)
     angle <- atan2(abs(dlat), abs(dlong)) / pi * 180 
-    paste0("The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
-           " degrees from ", di, ".")
+    paste0("<h4>The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
+           " degrees from ", di, ".</h4>")
   })
   
   leafIcons <- icons(
