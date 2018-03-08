@@ -31,4 +31,6 @@ In the map2, the user can see the location about the places nearby from the plac
 
 2.  We used leaflet to draw interactive graphs of the dataset. We also extracted detailed information from the dataset.
 
-3.  We will also be triangulating the user’s position to restaurants in the area to find the closest restaurant. We also answered answered the question regarding the locations of location by visualizing it on our map.
+3.  We triangulated the user’s position to restaurants' in the area to find the distance and direction. We also answered answered the question regarding the locations of location by visualizing it on our map.
+
+4.  Another idea we try to present it when the users searches for a particular type of stores, we displayed the location of all of the stores, thereby entailing the concentration of the stores which the users can then interpret. 
