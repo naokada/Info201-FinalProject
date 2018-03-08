@@ -57,7 +57,7 @@ server <- function(input, output) {
   
   pic.url <- reactive({
     
-    photo.reference <- place.details()$result$photos$photo_reference[input$place.id.number]
+    photo.reference <- place.details()$result$photos$photo_reference[1]
     resource <- paste0(base.url, "photo?")
     parameters <- list(maxwidth = 500, maxheight = 400,photoreference=photo.reference, key = google.api.key, placeid = place.id())
     photo <- GET(resource, query = parameters)
