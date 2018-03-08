@@ -166,7 +166,34 @@ server <- function(input, output) {
   })
   
 output$info <- renderText({
-  "Since"
+  
+  "##Introduction##
+We are working with a data set containing information of all stores registered 
+on Google Place (resource https://developers.google.com/places/web-service/details)
+
+The data set is provided by the Google Places API. Google Places’ main function 
+is to host businesses. Businesses list their information such as location and 
+picture so Google users can find them on the map. This API is very convenient for 
+us because numerous shops and stores have registered themselves on Google Place, 
+granting us easy access to all relevant information about their businesses. 
+For example, we can obtain information such as address, names, hours, price level,
+photos, and even reviews.
+  
+  The data set will be turned into an interactive webpage that user uses to find a
+specific place and know about its basic information in deeper level. 
+For example, we will provide data analysis of price levels and reviews which are
+not only helpful to customers but also to the store owners. Or we will include 
+more detailed information about the time frame of open hours than the google map.
+
+##Instruction##
+   1. Users Enter the name of a location or click a location on the interactive map
+The user can type keyword in the input form or can click a location on the interactive map(the first tab of the maps). This application will take the data about the place you want to see!
+
+
+2. Users can also filter places of interest based on what type of location they are intersted in. For example, cafe, library, etc. 
+The user is needed to select type of the place, and this application provides information based on the type you selected.
+
+3. Users can interact with a slider that lets them slide through all the available locations. By moving the slider, the user can skim through all the places."  
 })
 
 

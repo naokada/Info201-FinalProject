@@ -61,7 +61,7 @@ ui <- dashboardPage(skin = "purple",
                         # Second tab content
                         tabItem(tabName = "dataTab",
                                 fluidRow(
-                                 textOutput("info")
+                                 verbatimTextOutput("info")
                                 )
                         )
                         )
