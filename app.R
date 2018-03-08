@@ -3,7 +3,7 @@ library("leaflet")
 library("shinydashboard")
 
 
-ui <- dashboardPage(skin = "purple",
+ui <- dashboardPage(skin = "purple", 
   dashboardHeader(title = "Place Lo-okup"),
   dashboardSidebar(
     sidebarMenu(
@@ -12,10 +12,11 @@ ui <- dashboardPage(skin = "purple",
     )
   ),
   dashboardBody(
+    includeCSS("outline.css"),
     tabItems(
       # First tab content
       tabItem(tabName = "mapTab",
-              h2("Interactive Map"),
+              h2("Interactive Map", style="color:#306800"),
               leafletOutput("map")
       ),
       
