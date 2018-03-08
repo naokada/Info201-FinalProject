@@ -22,8 +22,15 @@ server <- function(input, output) {
   
   # get the JSON result from the API
   data <- reactive({
+    
+    lat <- 47.6500093694438
+    lng <- -122.304010391235
+    if(!is.null(click())){
+      lat <- click()$lat
+      lng <- click()$lng
+    }
     base <- paste0(base.url, "nearbysearch/json?")
-    resource <- list(key = google.api.key, location = paste0(click()$lat, ",", click()$lng), 
+    resource <- list(key = google.api.key, location = paste0(lat, ",", lng), 
                      type = input$type, radius = 1000, name = input$name)
     body <- GET(base, query = resource)
     search <- fromJSON(content(body, "text"))
@@ -31,10 +38,6 @@ server <- function(input, output) {
   })
   
   
-  
-  #####################
-  # only for first tab
-  #####################
   place.id <- reactive({
     place.id <- data()$results$place_id[input$place.id.number]
     
@@ -105,6 +108,12 @@ server <- function(input, output) {
   
   # Print the distance and direction of the first thing in the relevent search results
   output$direction <- renderText({
+    lat <- 47.6500093694438
+    lng <- -122.304010391235
+    if(!is.null(click())){
+      lat <- click()$lat
+      lng <- click()$lng
+    }
     base <- paste0(base.url, "details/json?")
     # get the first relevent place
     resource <- list(key = google.api.key, placeid = data()$results$place_id[input$place.id.number])
@@ -113,11 +122,11 @@ server <- function(input, output) {
     # get shop's lat and long
     loc.shop <- c(final$result$geometry$location$lat, final$result$geometry$location$lng)
     # calculate distance
-    dist <- distm(c(loc.shop[2], loc.shop[1]), c(click()$lng, click()$lat), fun = distHaversine) *
+    dist <- distm(c(loc.shop[2], loc.shop[1]), c(lng, lat), fun = distHaversine) *
             0.000621
     # calculate difference in position
-    dlat <- loc.shop[1] - click()$lat
-    dlong <- loc.shop[2] - click()$lng
+    dlat <- loc.shop[1] - lat
+    dlong <- loc.shop[2] - lng
     # to determin what direction the angle changes from
     di <- "North"
     if (dlat < 0) {
@@ -156,7 +165,9 @@ server <- function(input, output) {
     
   })
   
-
+output$info <- renderText({
+  "Since"
+})
 
 
 }
