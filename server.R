@@ -1,4 +1,5 @@
-source(set.R)
+source("set.R")
+
 server <- function(input, output) {
   output$map <- renderLeaflet({
     
@@ -31,7 +32,7 @@ server <- function(input, output) {
   place.details <- reactive({
     
     resource <- paste0(base, "details/json?")
-    parameters <- list(key = google.api.key, placeid = place.id())
+    parameters <- list(key = google.google.api.key, placeid = place.id())
     body <- GET(resource, query = parameters)
     place.details <- fromJSON(content(body, "text"))
     
@@ -109,7 +110,7 @@ server <- function(input, output) {
   output$direction <- renderText({
     base <- paste0(base.url, "details/json?")
     # get the first relevent place
-    resource <- list(key = my.key, placeid = data()$results$place_id[1])
+    resource <- list(key = google.api.key, placeid = data()$results$place_id[1])
     body <- GET(base, query = resource)
     final <- fromJSON(content(body, "text"))
     # get shop's lat and long
@@ -139,4 +140,34 @@ server <- function(input, output) {
            " degrees from ", di, ".</h4>")
   })
   
+  leafIcons <- icons(
+    iconUrl = "http://leafletjs.com/examples/custom-icons/leaf-green.png",
+    iconWidth = 38, iconHeight = 95,
+    iconAnchorX = 22, iconAnchorY = 94,
+    shadowUrl = "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
+    shadowWidth = 50, shadowHeight = 64,
+    shadowAnchorX = 4, shadowAnchorY = 62
+  )
+  
+  
+  output$map <- renderLeaflet({
+    
+    leaflet() %>%
+      addTiles() %>% # Add default OpenStreetMap map tiles
+      setView(lng = -122.304010391235, lat = 47.6500093694438, zoom = 15) # UW lock
+  })
+  
+  observeEvent(input$map_click, {
+    click <- input$map_click
+    text<-paste("Lattitude ", click$lat, "Longtitude ", click$lng)
+    
+    leafletProxy("map") %>% clearPopups() %>% clearMarkers() %>%
+      addMarkers(lng =  click$lng, lat =  click$lat, icon = leafIcons) %>%
+      addPopups(click$lng, click$lat + click$lat * 0.00005, text)
+  })
+  
+  
+  
 }
+
+shinyServer(server)
