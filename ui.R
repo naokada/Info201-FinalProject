@@ -19,8 +19,7 @@ ui <- dashboardPage(skin = "purple",
                                     flowLayout(
                                       
                                         textInput("name", label = "Search for name:", value = ""),
-                                        p("Here is the direction and distance:"),
-                                        textOutput("direction"),
+                                        
                                    
                                     sliderInput("place.id.number",
                                                 "places in the database",
@@ -46,7 +45,8 @@ ui <- dashboardPage(skin = "purple",
                                               tabPanel(("map1"),leafletOutput("map")),
                                               tabPanel(("map2"),leafletOutput("map2"))),
                                   conditionalPanel(
-                                    
+                                    p("Direction and distance:"),
+                                    textOutput("direction"),
                                     condition = "input.place != '' | input.region != ''",
                                     br(),br(),
                                     htmlOutput("image"),
