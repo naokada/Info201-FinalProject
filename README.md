@@ -13,13 +13,13 @@ The data set will be turned into an interactive webpage that user uses to find a
 The user can type keyword in the input form or can click a location on the interactive map(the first tab of the maps). This application will take the data about the place you want to see!
 [![https://gyazo.com/c38981fe2c89f856904468ea47c3b0fe](https://i.gyazo.com/c38981fe2c89f856904468ea47c3b0fe.gif)](https://gyazo.com/c38981fe2c89f856904468ea47c3b0fe)
 
-2. Users can also filter places of interest based on what type of location they are intersted in. For example, cafe, library, etc. 
+2. Users can also filter places of interest based on what type of location they are intersted in. For example, cafe, library, etc.
 The user is needed to select type of the place, and this application provides information based on the type you selected.
 
 3. Users can interact with a slider that lets them slide through all the available locations. By moving the slider, the user can skim through all the places.
 
 4. Enjoy our application!
-On the widget on left, the user can see how far the place is from the point the user clicked(default is University of Wanshinton). 
+On the widget on left, the user can see how far the place is from the point the user clicked(default is University of Wanshinton).
 In the map2, the user can see the location about the places nearby from the place the user selected.
 
 [![https://gyazo.com/607d31b2c7d0850f17cfcd6a9646c76b](https://i.gyazo.com/607d31b2c7d0850f17cfcd6a9646c76b.gif)](https://gyazo.com/607d31b2c7d0850f17cfcd6a9646c76b)
@@ -27,11 +27,8 @@ In the map2, the user can see the location about the places nearby from the plac
 
 ## Description of the presentation  
 
-1.  We will be using HTML page to present our dataset. We get all our data from the open Google places API and organize the data through RStudio.
-    
-2.  We will be using ggplot to draw interactive graphs of the dataset. We will also extract detailed information from the dataset.
-    
-3.  Some processes we will use to answer our questions are trend lines for finding the correlation between rating and price. We will also be triangulating the user’s position to restaurants in the area to find the closest restaurant. And we will include dot-plots, bar graphs, pie charts and histogram to demonstrate the data.
-    
-4.  A major challenge will be on the technical side. Other than returning simple requests, analyzation such as finding the correlation or the closest location would require some trial and error in the coding process. The best way to solve that problem is to consult the group member to work on it together.
-    
+1.  We used shiny to present our data. We get all our data from the open Google places API and organize and process the data through RStudio.
+
+2.  We used leaflet to draw interactive graphs of the dataset. We also extracted detailed information from the dataset.
+
+3.  We will also be triangulating the user’s position to restaurants in the area to find the closest restaurant. We also answered answered the question regarding the locations of location by visualizing it on our map.
