@@ -23,13 +23,18 @@ server <- function(input, output) {
   # get the JSON result from the API
   data <- reactive({
     base <- paste0(base.url, "nearbysearch/json?")
-    resource <- list(key = google.api.key, location = paste0(click()$lat, ", ", click()$lng), 
+    resource <- list(key = google.api.key, location = paste0(click()$lat, ",", click()$lng), 
                      type = input$type, radius = 1000, name = input$name)
     body <- GET(base, query = resource)
     search <- fromJSON(content(body, "text"))
     search
   })
   
+  
+  
+  #####################
+  # only for first tab
+  #####################
   place.id <- reactive({
     place.id <- data()$results$place_id[input$place.id.number]
     
@@ -49,10 +54,9 @@ server <- function(input, output) {
   
   pic.url <- reactive({
     
-    photo.reference <- place.details()$result$photos$photo_reference[1]
-    resource <- paste0(base.url, "photo?maxwidth=500&maxheight=400&photoreference=",
-                       photo.reference, "&key=", google.api.key)
-    parameters <- list(key = google.api.key, placeid = place.id())
+    photo.reference <- place.details()$result$photos$photo_reference[input$place.id.number]
+    resource <- paste0(base.url, "photo?")
+    parameters <- list(maxwidth = 500, maxheight = 400,photoreference=photo.reference, key = google.api.key, placeid = place.id())
     photo <- GET(resource, query = parameters)
     photo.url <- photo[["url"]]
     
@@ -103,7 +107,7 @@ server <- function(input, output) {
   output$direction <- renderText({
     base <- paste0(base.url, "details/json?")
     # get the first relevent place
-    resource <- list(key = google.api.key, placeid = data()$results$place_id[1])
+    resource <- list(key = google.api.key, placeid = data()$results$place_id[input$place.id.number])
     body <- GET(base, query = resource)
     final <- fromJSON(content(body, "text"))
     # get shop's lat and long

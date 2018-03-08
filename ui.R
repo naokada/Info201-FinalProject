@@ -42,7 +42,9 @@ ui <- dashboardPage(skin = "purple",
                                 ), style='width: 240px'),  
                                 
                                 mainPanel(
-                                  leafletOutput("map"),
+                                  tabsetPanel(type="tabs",
+                                              tabPanel(("map1"),leafletOutput("map")),
+                                              tabPanel(("map2"),leafletOutput("map2"))),
                                   conditionalPanel(
                                     
                                     condition = "input.place != '' | input.region != ''",
@@ -53,51 +55,20 @@ ui <- dashboardPage(skin = "purple",
                                     tableOutput("reviews")
                                   )
                                 )
+      
                         )),
                         
                         # Second tab content
                         tabItem(tabName = "dataTab",
-                                h2("Data Map", style="color:#306800"),
-                                sidebarLayout (
-                                  sidebarPanel( 
-                                    flowLayout(
-                                      
-                                      textInput("name", label = "Search for name:", value = ""),
-                                      p("Here is the direction and distance:"),
-                                      textOutput("direction"),
-                                      
-                                      sliderInput("place.id.number",
-                                                  "places in the database",
-                                                  value = 1,
-                                                  min = 1,
-                                                  max = 20
-                                      ),
-                                      br(),
-                                      selectInput("type", 
-                                                  "types of the places", 
-                                                  c("library", "restaurant", "cafe", "cafe", "hospital",
-                                                    "pharmacy", "bank", "atm")),
-                                      p("It is not designed for exact search but for exploring in a global scale"),
-                                      p("It is helpful if you want to know the surronding of any place in the world
-                                        such as Eiffel Tower or Statue of Liberty")
-                                    
+                                fluidRow(
+                                  box(plotOutput("plot1", height = 250)),
                                   
-                                  
-                                ), style='width: 240px'),  
-                                
-                                mainPanel(
-                                  leafletOutput("map2"),
-                                  conditionalPanel(
-                                    
-                                    condition = "input.place != '' | input.region != ''",
-                                    
-                                    htmlOutput("image"),
-                                    br(),
-                                    tableOutput("table"),
-                                    tableOutput("reviews")
+                                  box(
+                                    title = "Controls",
+                                    sliderInput("slider", "Number of observations:", 1, 100, 50)
                                   )
                                 )
-                        )))
+                        )
+                        )
     )
 )
-shinyUI(ui)
