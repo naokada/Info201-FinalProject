@@ -7,6 +7,10 @@ server <- function(input, output) {
       setView(lng = -122.304010391235, lat = 47.6500093694438, zoom = 15) # UW lock
   })
   
+  click <- reactive({
+    return(input$map_click)
+  })
+  
   observeEvent(input$map_click, {
     click <- input$map_click
     text<-paste("Lattitude ", click$lat, "Longtitude ", click$lng)
@@ -93,7 +97,7 @@ server <- function(input, output) {
   # get the JSON result from the API
   data <- reactive({
     base <- paste0(base.url, "nearbysearch/json?")
-    resource <- list(key = my.key, location = paste0(input$lat, ", ", input$long), 
+    resource <- list(key = my.key, location = paste0(click$lat, ", ", click$lng), 
                      radius = 1000, name = input$name)
     body <- GET(base, query = resource)
     search <- fromJSON(content(body, "text"))
@@ -115,11 +119,11 @@ server <- function(input, output) {
     # get shop's lat and long
     loc.shop <- c(final$result$geometry$location$lat, final$result$geometry$location$lng)
     # calculate distance
-    dist <- distm(c(loc.shop[2], loc.shop[1]), c(input$long, input$lat), fun = distHaversine) *
+    dist <- distm(c(loc.shop[2], loc.shop[1]), c(click$lng, click$lat), fun = distHaversine) *
             0.000621
     # calculate difference in position
-    dlat <- loc.shop[1] - input$lat
-    dlong <- loc.shop[2] - input$long
+    dlat <- loc.shop[1] - click$lat
+    dlong <- loc.shop[2] - click$lng
     # to determin what direction the angle changes from
     di <- "North"
     if (dlat < 0) {
@@ -137,6 +141,25 @@ server <- function(input, output) {
     angle <- atan2(abs(dlat), abs(dlong)) / pi * 180 
     paste0("<h4>The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
            " degrees from ", di, ".</h4>")
+  })
+  
+  output$map2 <- renderLeaflet({
+    
+    
+    name <-  data()$result$name
+    place.id <- data()$result$place_id
+    lat <- data()$result$geometry$location$lat
+    lng <- data()$result$geometry$location$lng
+    
+    marks <- data.frame(name, place.id, lat, lng) %>%
+      mutate(info = paste0("<h3>", name, "</h3>"))
+    
+    map2 <- leaflet(marks) %>%
+      addTiles() %>%  # Add default OpenStreetMap map tiles
+      addMarkers(lng=~lng, lat=~lat, popup=~info)
+    
+    
+    
   })
   
 }
