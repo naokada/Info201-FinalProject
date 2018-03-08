@@ -75,11 +75,7 @@ server <- function(input, output) {
     return(review.data)
   })
   
-  url <- a("Click me", href="https://www.latlong.net/")
-  
-  output$link <- renderUI({
-    tagList("Use this to search for latitude and longitude for a place:", url)
-  })
+
   
   output$image <- renderText({
     c('<img src="', pic.url(),'">')
@@ -96,7 +92,7 @@ server <- function(input, output) {
   
   # get the JSON result from the API
   data <- reactive({
-    base <- "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
+    base <- paste0(base.url, "nearbysearch/json?")
     resource <- list(key = my.key, location = paste0(input$lat, ", ", input$long), 
                      radius = 1000, name = input$name)
     body <- GET(base, query = resource)
@@ -111,7 +107,7 @@ server <- function(input, output) {
   
   # Print the distance and direction of the first thing in the relevent search results
   output$direction <- renderText({
-    base <- "https://maps.googleapis.com/maps/api/place/details/json?"
+    base <- paste0(base.url, "details/json?")
     # get the first relevent place
     resource <- list(key = my.key, placeid = data()$results$place_id[1])
     body <- GET(base, query = resource)
@@ -139,8 +135,8 @@ server <- function(input, output) {
     }
     # calculates the angle. (the angle goes clockwise)
     angle <- atan2(abs(dlat), abs(dlong)) / pi * 180 
-    paste0("The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
-           " degrees from ", di, ".")
+    paste0("<h4>The distance is ", round(dist, 3), " miles, and ", round(angle, 2), 
+           " degrees from ", di, ".</h4>")
   })
   
 }
