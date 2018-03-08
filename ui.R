@@ -24,8 +24,8 @@ ui <- dashboardPage(skin = "purple",
                                         p("Here is the direction and distance:"),
                                         textOutput("direction"),
                                       
-                                  
-                                  
+                                    
+                                    
                                     
                                     p("Type in a location you want to look up or skim through 
                                       the map and click on a location of interest."),

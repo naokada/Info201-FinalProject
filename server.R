@@ -11,8 +11,8 @@ server <- function(input, output) {
   place.id <- reactive({
     
     resource <- paste0(base, "textsearch/json?")
-    parameters <- list(key = google.api.key, query = input$region, 
-                       type = input$type, location = input$location, radius = 600)
+    parameters <- list(key = google.api.key, 
+                       location = paste0(click()$lat,", ",click()$lng), radius = 600)
     body <- GET(resource, query = parameters)
     place <- fromJSON(content(body, "text"))
     
