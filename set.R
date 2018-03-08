@@ -7,7 +7,8 @@ library("geosphere")
 library("leaflet")
 library("shinydashboard")
 
-source("mykey.R")
+source("apikey.R")
+
 
 # icons
 red.leaf.icons <- icons(
@@ -38,21 +39,21 @@ orange.leaf.icons <- icons(
 )
 
 base.url <- "https://maps.googleapis.com/maps/api/place/"
-nearby.resource <- paste0(base, "nearbysearch/json?")
+resource <- paste0(base.url, "nearbysearch/json?")
 parameters <- list(key = google.api.key, location = "47.654966, -122.307910", radius = 1000)
 body <- GET(resource, query = parameters)
 place <- fromJSON(content(body, "text"))
 
 place.id <- place$results$place_id[5]
 
-resource <- paste0(base, "details/json?")
+resource <- paste0(base.url, "details/json?")
+
 parameters <- list(key = google.api.key, placeid = place.id)
 body <- GET(resource, query = parameters)
 place.details <- fromJSON(content(body, "text"))
 photo.reference <- place.details$result$photos$photo_reference[4]
-print(output.obs)
 
-resource <- paste0(base, "photo?maxwidth=400&photoreference=", photo.reference, "&key=", google.api.key)
+resource <- paste0(base.url, "photo?maxwidth=400&photoreference=", photo.reference, "&key=", google.api.key)
 photo <- GET(resource, query = parameters)
 photo.url <- photo[["url"]]
 
